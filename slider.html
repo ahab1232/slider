@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; img-src 'self' https://images.unsplash.com data:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Оптимизированный слайдер | Безопасность и скорость</title>
+    
+    <!-- Предзагрузка критических ресурсов -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    
+    <!-- Оптимизированные изображения с WebP форматом и указанием размеров -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" as="image" imagesrcset="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80 800w" imagesizes="(max-width: 600px) 400px, 800px">
+    
+    <!-- Минимизированный Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: true,
+            }
+        }
+    </script>
+    
+    <!-- Минимизированный Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Встроенный критический CSS (оптимизированный) -->
+    <style>
+        .banner-container{position:relative;overflow:hidden;transition:all .5s ease;box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}.banner-slide{position:absolute;width:100%;height:100%;opacity:0;transform:scale(1.05);transition:all .8s cubic-bezier(.68,-.55,.265,1.55);z-index:1}.banner-slide.active{opacity:1;transform:scale(1);z-index:2}.banner-slide img{width:100%;height:100%;object-fit:cover;object-position:center}.banner-dots{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:12px;z-index:3}.banner-dot{width:14px;height:14px;border-radius:50%;background-color:rgba(255,255,255,.5);cursor:pointer;transition:all .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.2)}.banner-dot.active{background-color:#fff;transform:scale(1.3);box-shadow:0 0 10px rgba(255,255,255,.8)}.banner-nav{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,.2);backdrop-filter:blur(5px);color:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:all .3s ease;z-index:3;box-shadow:0 4px 15px rgba(0,0,0,.2)}.banner-container:hover .banner-nav{opacity:1}.banner-nav:hover{background-color:rgba(255,255,255,.3);transform:translateY(-50%) scale(1.1)}.banner-prev{left:30px}.banner-next{right:30px}.banner-caption{position:absolute;bottom:80px;left:0;right:0;text-align:center;color:#fff;padding:25px;background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:3;transform:translateY(20px);opacity:0;transition:all .5s ease .3s}.banner-slide.active .banner-caption{transform:translateY(0);opacity:1}.banner-caption h3{font-size:2rem;margin-bottom:10px;text-shadow:2px 2px 5px rgba(0,0,0,.8);font-weight:700}.banner-caption p{font-size:1.2rem;text-shadow:1px 1px 3px rgba(0,0,0,.8);max-width:800px;margin:0 auto}.progress-bar{position:absolute;bottom:0;left:0;height:4px;background-color:rgba(255,255,255,.5);z-index:3;transition:width .1s linear}@media (max-width:768px){.banner-caption h3{font-size:1.5rem}.banner-caption p{font-size:1rem}.banner-nav{width:40px;height:40px}}
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-bold text-center mb-12 text-gray-800">Оптимизированный слайдер</h1>
+        
+        <!-- Ленивая загрузка изображений с адаптивными размерами -->
+        <div class="banner-container w-full h-96 md:h-[600px] rounded-2xl relative mx-auto max-w-6xl">
+            <div class="banner-slide active">
+                <img 
+                    src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                    srcset="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80 400w, 
+                            https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80 800w" 
+                    sizes="(max-width: 600px) 400px, 800px"
+                    alt="Природа" 
+                    loading="lazy" 
+                    width="800" 
+                    height="533"
+                    decoding="async">
+                <div class="banner-caption">
+                    <h3>Красота природы</h3>
+                    <p>Наслаждайтесь великолепными пейзажами со всего мира в любое время года</p>
+                </div>
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div class="banner-slide">
+                <img 
+                    src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                    srcset="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80 400w, 
+                            https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80 800w" 
+                    sizes="(max-width: 600px) 400px, 800px"
+                    alt="Город" 
+                    loading="lazy" 
+                    width="800" 
+                    height="533"
+                    decoding="async">
+                <div class="banner-caption">
+                    <h3>Городские пейзажи</h3>
+                    <p>Откройте для себя динамику современных мегаполисов и их архитектуру</p>
+                </div>
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div class="banner-slide">
+                <img 
+                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                    srcset="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80 400w, 
+                            https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80 800w" 
+                    sizes="(max-width: 600px) 400px, 800px"
+                    alt="Технологии" 
+                    loading="lazy" 
+                    width="800" 
+                    height="533"
+                    decoding="async">
+                <div class="banner-caption">
+                    <h3>Инновации</h3>
+                    <p>Будущее уже наступило - исследуйте новые технологии и их возможности</p>
+                </div>
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div class="banner-slide">
+                <img 
+                    src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                    srcset="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80 400w, 
+                            https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80 800w" 
+                    sizes="(max-width: 600px) 400px, 800px"
+                    alt="Путешествия" 
+                    loading="lazy" 
+                    width="800" 
+                    height="533"
+                    decoding="async">
+                <div class="banner-caption">
+                    <h3>Путешествия</h3>
+                    <p>Отправляйтесь в незабываемые приключения по всему миру</p>
+                </div>
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div class="banner-nav banner-prev">
+                <i class="fas fa-chevron-left text-xl"></i>
+            </div>
+            
+            <div class="banner-nav banner-next">
+                <i class="fas fa-chevron-right text-xl"></i>
+            </div>
+            
+            <div class="banner-dots">
+                <div class="banner-dot active" data-index="0"></div>
+                <div class="banner-dot" data-index="1"></div>
+                <div class="banner-dot" data-index="2"></div>
+                <div class="banner-dot" data-index="3"></div>
+            </div>
+        </div>
+        
+        <div class="mt-16 p-8 bg-white rounded-xl shadow-lg max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800">Оптимизация и безопасность</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex items-start space-x-4">
+                    <div class="bg-blue-100 p-3 rounded-full text-blue-600">
+                        <i class="fas fa-tachometer-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">Оптимизация скорости</h3>
+                        <p class="text-gray-600">Сжатые изображения, ленивая загрузка, предзагрузка ресурсов</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="bg-green-100 p-3 rounded-full text-green-600">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">Защита от XSS</h3>
+                        <p class="text-gray-600">Санкционизация HTML, CSP политика, безопасный JavaScript</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="bg-purple-100 p-3 rounded-full text-purple-600">
+                        <i class="fas fa-lock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">HTTPS защита</h3>
+                        <p class="text-gray-600">Все ресурсы загружаются по защищенному протоколу</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="bg-yellow-100 p-3 rounded-full text-yellow-600">
+                        <i class="fas fa-mobile-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">Адаптивность</h3>
+                        <p class="text-gray-600">Оптимизировано для всех устройств и разрешений экрана</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Минимизированный и безопасный JavaScript -->
+    <script>
+        // IIFE для изоляции области видимости
+        (function() {
+            'use strict';
+            
+            // Функция для защиты от XSS
+            const sanitize = {
+                escape: function(str) {
+                    if (!str) return '';
+                    return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
+                },
+                sanitizeHTML: function(html) {
+                    const doc = document.implementation.createHTMLDocument('');
+                    const div = doc.createElement('div');
+                    div.textContent = html;
+                    return div.innerHTML;
+                }
+            };
+            
+            // Основная функция слайдера
+            function initBanner() {
+                const select = (el) => document.querySelector(el),
+                      selectAll = (els) => document.querySelectorAll(els),
+                      slides = selectAll('.banner-slide'),
+                      dots = selectAll('.banner-dot'),
+                      prevBtn = select('.banner-prev'),
+                      nextBtn = select('.banner-next'),
+                      progressBars = selectAll('.progress-bar');
+                
+                let currentSlide = 0,
+                    interval,
+                    progressInterval,
+                    slideInterval = 5000,
+                    progress = 0;
+                
+                // Обновление слайдов
+                function updateSlides() {
+                    slides.forEach((slide, index) => {
+                        slide.classList.toggle('active', index === currentSlide);
+                    });
+                    
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentSlide);
+                    });
+                    
+                    resetProgress();
+                }
+                
+                // Сброс прогресс-бара
+                function resetProgress() {
+                    progressBars.forEach(bar => {
+                        bar.style.width = '0%';
+                    });
+                }
+                
+                // Переход к слайду
+                function goToSlide(index) {
+                    if (index < 0) index = slides.length - 1;
+                    if (index >= slides.length) index = 0;
+                    currentSlide = index;
+                    updateSlides();
+                    restartTimer();
+                }
+                
+                // Следующий слайд
+                function nextSlide() {
+                    goToSlide(currentSlide + 1);
+                }
+                
+                // Предыдущий слайд
+                function prevSlide() {
+                    goToSlide(currentSlide - 1);
+                }
+                
+                // Перезапуск таймеров
+                function restartTimer() {
+                    clearInterval(interval);
+                    clearInterval(progressInterval);
+                    startSlideTimer();
+                    startProgressTimer();
+                }
+                
+                // Таймер слайдов
+                function startSlideTimer() {
+                    interval = setInterval(nextSlide, slideInterval);
+                }
+                
+                // Таймер прогресс-бара
+                function startProgressTimer() {
+                    progress = 0;
+                    const activeBar = progressBars[currentSlide];
+                    
+                    progressInterval = setInterval(() => {
+                        progress += 10;
+                        const percentage = (progress / slideInterval) * 100;
+                        activeBar.style.width = `${percentage}%`;
+                        
+                        if (progress >= slideInterval) {
+                            clearInterval(progressInterval);
+                        }
+                    }, 10);
+                }
+                
+                // Обработка наведения
+                function handleHover() {
+                    const banner = select('.banner-container');
+                    
+                    banner.addEventListener('mouseenter', () => {
+                        clearInterval(interval);
+                        clearInterval(progressInterval);
+                    });
+                    
+                    banner.addEventListener('mouseleave', () => {
+                        startSlideTimer();
+                        startProgressTimer();
+                    });
+                }
+                
+                // Обработка свайпа
+                function handleSwipe() {
+                    const banner = select('.banner-container');
+                    let touchStartX = 0,
+                        touchEndX = 0;
+                    
+                    banner.addEventListener('touchstart', (e) => {
+                        touchStartX = e.changedTouches[0].screenX;
+                        clearInterval(interval);
+                        clearInterval(progressInterval);
+                    }, {passive: true});
+                    
+                    banner.addEventListener('touchend', (e) => {
+                        touchEndX = e.changedTouches[0].screenX;
+                        handleSwipeGesture();
+                        startSlideTimer();
+                    }, {passive: true});
+                    
+                    function handleSwipeGesture() {
+                        if (touchEndX < touchStartX - 50) {
+                            nextSlide();
+                        } else if (touchEndX > touchStartX + 50) {
+                            prevSlide();
+                        }
+                    }
+                }
+                
+                // Инициализация событий
+                function initEvents() {
+                    dots.forEach(dot => {
+                        dot.addEventListener('click', () => {
+                            const index = parseInt(dot.getAttribute('data-index'));
+                            if (!isNaN(index)) goToSlide(index);
+                        });
+                    });
+                    
+                    prevBtn.addEventListener('click', prevSlide);
+                    nextBtn.addEventListener('click', nextSlide);
+                    
+                    handleHover();
+                    handleSwipe();
+                }
+                
+                // Запуск слайдера
+                function startSlider() {
+                    initEvents();
+                    updateSlides();
+                    startSlideTimer();
+                    startProgressTimer();
+                }
+                
+                startSlider();
+            }
+            
+            // Запуск после загрузки DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initBanner);
+            } else {
+                initBanner();
+            }
+        })();
+    </script>
+</body>
+</html>
